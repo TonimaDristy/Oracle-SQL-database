@@ -1,0 +1,66 @@
+
+
+-- Create department table
+CREATE TABLE departments (
+    dept_id NUMBER PRIMARY KEY,
+    dept_name VARCHAR2(50),
+    location VARCHAR2(50)
+);
+
+-- Create employee table
+CREATE TABLE employees (
+    emp_id NUMBER PRIMARY KEY,
+    emp_name VARCHAR2(50),
+    job_title VARCHAR2(50),
+    salary NUMBER(10,2),
+    hire_date DATE,
+    dept_id NUMBER,
+    CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+
+-- Insert departments
+INSERT INTO departments VALUES (10, 'IT', 'Dhaka');
+INSERT INTO departments VALUES (20, 'HR', 'Chittagong');
+INSERT INTO departments VALUES (30, 'Finance', 'Sylhet');
+
+-- Insert employees
+INSERT INTO employees VALUES (1, 'Arif', 'Software Engineer', 60000, DATE '2022-05-10', 10);
+INSERT INTO employees VALUES (2, 'Nabila', 'HR Officer', 45000, DATE '2021-08-15', 20);
+INSERT INTO employees VALUES (3, 'Hasan', 'Accountant', 50000, DATE '2020-03-20', 30);
+INSERT INTO employees VALUES (4, 'Mitu', 'System Admin', 55000, DATE '2023-01-05', 10);
+
+-- View data
+SELECT * FROM departments;
+SELECT * FROM employees;
+
+-- Employees with their departments (JOIN)
+SELECT e.emp_name, e.job_title, d.dept_name, d.location
+FROM employees e
+JOIN departments d ON e.dept_id = d.dept_id;
+
+-- Highest salary
+SELECT emp_name, salary
+FROM employees
+WHERE salary = (SELECT MAX(salary) FROM employees);
+
+-- Average salary by department
+SELECT d.dept_name, AVG(e.salary) AS avg_salary
+FROM employees e
+JOIN departments d ON e.dept_id = d.dept_id
+GROUP BY d.dept_name;
+
+-- Employees hired after 2021
+SELECT emp_name, hire_date
+FROM employees
+WHERE hire_date > DATE '2021-12-31';
+
+-- Update salary
+UPDATE employees
+SET salary = salary + 5000
+WHERE dept_id = 10;
+
+-- Delete an employee
+DELETE FROM employees WHERE emp_id = 3;
+
+-- Final view
+SELECT * FROM employees;
